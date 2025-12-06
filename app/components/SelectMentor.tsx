@@ -1,10 +1,18 @@
 "use client";
-
 import React from "react";
 import { Checkbox, CheckboxGroup, User, Chip, cn } from "@heroui/react";
 
+// Better Type for user
+interface UserInfo {
+  name: string;
+  avatar: string;
+  username: string;
+  role: string;
+  status: string;
+}
+
 interface CustomCheckboxProps {
-  user: any;
+  user: UserInfo;
   statusColor:
     | "default"
     | "primary"
@@ -51,8 +59,24 @@ export const CustomCheckbox = ({
   );
 };
 
-export default function SelectMentor() {
+interface SelectMentorProps {
+  onSelect: (mentor: string) => void;
+}
+
+export default function SelectMentor({ onSelect }: SelectMentorProps) {
   const [groupSelected, setGroupSelected] = React.useState<string[]>([]);
+
+  // Allow only one selection
+  const handleChange = (val: string[]) => {
+    if (val.length === 0) {
+      setGroupSelected([]);
+      onSelect(""); // FIXED: must send empty string
+    } else {
+      const last = val[val.length - 1];
+      setGroupSelected([last]);
+      onSelect(last); // mentor NAME passed
+    }
+  };
 
   return (
     <div className="flex flex-col gap-3 w-full max-w-lg mx-auto p-2 sm:p-0">
@@ -60,8 +84,7 @@ export default function SelectMentor() {
         classNames={{ base: "w-full" }}
         label="Select Consultant"
         value={groupSelected}
-        // Only one selectable
-        onChange={(val: string[]) => setGroupSelected([val[val.length - 1]])}
+        onChange={handleChange}
       >
         {/* Rabeya */}
         <CustomCheckbox
@@ -105,7 +128,7 @@ export default function SelectMentor() {
 
       {groupSelected.length > 0 && (
         <p className="mt-2 text-sm text-gray-600">
-          Selected: {groupSelected.join(", ")}
+          Selected: {groupSelected[0]}
         </p>
       )}
     </div>

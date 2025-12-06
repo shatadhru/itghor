@@ -3,6 +3,8 @@ import "@/styles/main.css";
 import "@/styles/custom.css";
 import { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
+import { Toaster } from "react-hot-toast";
+
 
 
 import { siteConfig } from "@/config/site";
@@ -58,6 +60,7 @@ export default function RootLayout({
           <div className="relative flex flex-col h-screen">
             <main className="light">
               {children}
+              <Toaster position="top-right" />
             </main>
             <FooterNew />
           </div>
